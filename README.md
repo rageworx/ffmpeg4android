@@ -25,3 +25,9 @@ export ANDROID_BUILD_TOP=${ANDROID_NDK}
 export NDK=${ANDROID_NDK}
 export PATH=${PATH}:${ANDROID_NDK}
 ~~~~~
+
+## How to build?
+- Move to cloned directory and go to sub directory named "JNI".
+- You should see many files.
+- You don't need use config-ffmpeg.sh directly in JNI directory. It may not works in stand alone.
+- You should be use "build-ffmpeg.sh" or "rebuild-ffmpeg.sh" for build target or all of targets.
