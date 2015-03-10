@@ -9,6 +9,10 @@ A FFmpeg library for Android API level 12, Refered to MX player open source.
 - Linux with Android NDK build environment (Windows not tested)
 - ${NDK} must be exported in your terminal environmet. If not, refer to below section of "Environments".
 
+## Your first modify
+- Check your linux system: x86 or x86-64.
+- 
+
 ## Modified
 - Changed some NDK reference and bash shell scripts.
 
@@ -26,8 +30,17 @@ export NDK=${ANDROID_NDK}
 export PATH=${PATH}:${ANDROID_NDK}
 ~~~~~
 
-## How to build?
+## How to build library?
 - Move to cloned directory and go to sub directory named "JNI".
 - You should see many files.
 - You don't need use config-ffmpeg.sh directly in JNI directory. It may not works in stand alone.
 - You should be use "build-ffmpeg.sh" or "rebuild-ffmpeg.sh" for build target or all of targets.
+
+## How to make an Android project?
+- You should see these files and a directory in base directory.
+  1. AndroidManifest.xml
+  2. default.properties
+  3. /src/*
+- These files required for your Android app. development.
+- An empty example source placed in src directory and it belogs to MX player developer's unique name field.
+- You should be change AndroidManifest.xml and source directory structure to create new own source. (or use Eclipse)
