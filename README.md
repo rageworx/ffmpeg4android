@@ -9,6 +9,10 @@ A FFmpeg library for Android API level 12, Refered to MX player open source.
 - Linux with Android NDK build environment (Windows not tested)
 - ${NDK} must be exported in your terminal environmet. If not, refer to below section of "Environments".
 
+## Your first modify
+- Check your linux system: x86 or x86-64.
+- 
+
 ## Modified
 - Changed some NDK reference and bash shell scripts.
 
