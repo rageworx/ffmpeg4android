@@ -1,4 +1,4 @@
-# ffmpeg4android
+# ffmpeg4android (v2.4)
  - A FFmpeg library for Android API level 12, Refered to MX player open source.
  - Modified to do not refer to these libraries:
    - iconv(libiconv)
@@ -18,8 +18,10 @@
 - Check your NDK tool-chain. (It requires latest version)
 
 ## Modified
+- Updated source to version 2.4 (MXplayer open source is 1.7.x)
 - Changed some NDK reference and bash shell scripts.
 - Changed MX player building scripts to do not refer to additional libraries.
+- Removed some external libraries: openssl, iconv ...
 
 ## Environments
 - You should be check by using "env | grep NDK".
