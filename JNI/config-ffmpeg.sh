@@ -99,13 +99,6 @@ case $1 in
 		exit
 esac
 
-INC_OPENSSL=../openssl-1.0.1g/include
-INC_OPUS=../opus-1.1/include
-INC_SPEEX=../speex-1.2rc1/include
-INC_ZVBI=../zvbi-0.2.35/src
-INC_ICONV=../modified_src/iconv
-INC_MODPLUG=../libmodplug/src
-
 if [ $ARCH == 'arm' ] 
 then
 	CROSS_PREFIX=$NDK/toolchains/arm-linux-androideabi-$GCC_VER/prebuilt/$HOST_PLATFORM/bin/arm-linux-androideabi-
@@ -146,6 +139,13 @@ if [ "$TEST_EXE" == "" ]; then
     exit 0
 fi
 
+SYS_ROOT="$NDK/platforms/$APP_PLATFORM/arch-$ARCH"
+if [ ! -e $SYS_ROOT ]; then
+    echo "Error: Android NDK system root not exists."
+    echo "$SYS_ROOT"
+    exit 0
+fi
+
 ./configure \
 --enable-static \
 --disable-shared \
@@ -153,6 +153,7 @@ fi
 --enable-optimizations \
 --enable-pthreads \
 --disable-debug \
+--disable-iconv \
 --disable-doc \
 --disable-programs \
 --disable-symver \
@@ -192,22 +193,17 @@ fi
 --disable-decoder=vplayer \
 --disable-decoder=mpl2 \
 --disable-decoder=webvtt \
---enable-openssl \
 --enable-zlib \
---enable-libopus \
---enable-libspeex \
---enable-libzvbi \
---enable-libmodplug \
 --enable-network \
 --enable-demuxer=rtsp \
 --arch=$ARCH \
 --cpu=$CPU \
 --cross-prefix=$CROSS_PREFIX \
 --enable-cross-compile \
---sysroot=$NDK/platforms/$APP_PLATFORM/arch-$ARCH \
+--sysroot=$SYS_ROOT \
 --target-os=linux \
---extra-cflags="-I$INC_ICONV -I$INC_ZVBI -I$INC_OPENSSL -I$INC_OPUS -I$INC_SPEEX -I$INC_MODPLUG -DNDEBUG -DMXTECHS -mandroid -ftree-vectorize -ffunction-sections -funwind-tables -fomit-frame-pointer -funswitch-loops -finline-limit=300 -finline-functions -fpredictive-commoning -fgcse-after-reload -fipa-cp-clone $EXTRA_CFLAGS -no-canonical-prefixes -pipe" \
---extra-libs="-L$LIB_MX -L../libs/android/$LINK_AGAINST -lmxutil -lm" \
+--extra-cflags="-DNDEBUG -mandroid -ftree-vectorize -ffunction-sections -funwind-tables -fomit-frame-pointer -funswitch-loops -finline-limit=300 -finline-functions -fpredictive-commoning -fgcse-after-reload -fipa-cp-clone $EXTRA_CFLAGS -no-canonical-prefixes -pipe" \
+--extra-libs="-L$LIB_MX -L../libs/android/$LINK_AGAINST -lm" \
 --extra-ldflags="$EXTRA_LDFLAGS" \
 --optflags="$OPTFLAGS" \
 $EXTRA_PARAMETERS \

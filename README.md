@@ -1,5 +1,9 @@
 # ffmpeg4android
-A FFmpeg library for Android API level 12, Refered to MX player open source.
+ - A FFmpeg library for Android API level 12, Refered to MX player open source.
+ - Modified to do not refer to these libraries:
+   - iconv(libiconv)
+   - openssl(libopenssl)
+   - and more libraries in has not dependancy on compiler built in libraries.
 
 ## Reference
 - MX player home page : https://sites.google.com/site/mxvpen/ffmpeg
@@ -9,12 +13,13 @@ A FFmpeg library for Android API level 12, Refered to MX player open source.
 - Linux with Android NDK build environment (Windows not tested)
 - ${NDK} must be exported in your terminal environmet. If not, refer to below section of "Environments".
 
-## Your first modify
+## Your first checking issues
 - Check your linux system: x86 or x86-64.
-- 
+- Check your NDK tool-chain. (It requires latest version)
 
 ## Modified
 - Changed some NDK reference and bash shell scripts.
+- Changed MX player building scripts to do not refer to additional libraries.
 
 ## Environments
 - You should be check by using "env | grep NDK".

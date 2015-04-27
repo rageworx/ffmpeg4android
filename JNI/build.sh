@@ -296,12 +296,6 @@ v5te()
 }
 
 
-if [ $TARGET == 'mxvp' ]
-then
-	/home/blue/workspace/GenSecureString/Debug/GenSecureString `pwd`/mxvp/android/sec_str
-	/home/blue/workspace/GenSecureBytes/Debug/GenSecureBytes `pwd`/mxvp/android/sec_bytes
-fi
-
 # @note 'then' should appear next line of [] block. 'do' for 'for' seems to be same.. i don't know why ..
 #if [ $# -eq 1 ]
 #then
