@@ -12,6 +12,9 @@
 bin/
 gen/
 obj/
+lib/
+*.tar
+*.tar.gz
 
 # Gradle files
 .gradle/
