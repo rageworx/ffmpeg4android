@@ -9,7 +9,7 @@
 
 # Latest modified : 03-10-2015, Raphael Kim <rage.kim@gmail.com>
 
-# Test parameter
+# Test parameters
 if [ "$1" == "" ]; then
     echo "Error: requires one parameter for TARGET."
     exit 0
@@ -26,6 +26,20 @@ COPY=0
 BUILD=0
 PROFILE=0
 CPU_CORE=12
+APLATFORM=21
+SUPPROTED=0
+
+if [ $APLATFORM -gt 18 ]; then
+    if [ $APLATFORM -lt 22 ]; then
+        SUPPORTED=1
+    fi
+fi
+
+if [ $SUPPORT -eq 0 ]; then
+   echo "Error: Application platform value is smaller than 19."
+   echo "       This build supports 19 to 21 (Android 4.4 to 5.x)"
+   exit 0
+fi
 
 MAKE=$NDK/ndk-build
 
@@ -54,7 +68,7 @@ mips32r2()
 		$MAKE NDK_DEBUG=0 \
 				  -j$CPU_CORE \
 				  -e APP_ABI=mips \
-				  -e APP_PLATFORM=android-19 \
+				  -e APP_PLATFORM=android-$APLATFORM \
 				  -e LINK_AGAINST=15-mips \
 				  -e APP_BUILD_SCRIPT=a-$TARGET.mk \
 				  -e ARCH=mips32r2 \
@@ -73,7 +87,7 @@ x86_64()
 		$MAKE NDK_DEBUG=0 \
 				  -j$CPU_CORE \
 				  -e APP_ABI=x86_64 \
-				  -e APP_PLATFORM=android-21 \
+				  -e APP_PLATFORM=android-$APLATFORM \
 				  -e LINK_AGAINST=21-x86_64 \
 				  -e APP_BUILD_SCRIPT=a-$TARGET.mk \
 				  -e ARCH=atom \
@@ -93,7 +107,7 @@ x86()
 		$MAKE NDK_DEBUG=0 \
 				  -j$CPU_CORE \
 				  -e APP_ABI=x86 \
-				  -e APP_PLATFORM=android-19 \
+				  -e APP_PLATFORM=android-$APLATFORM \
 				  -e LINK_AGAINST=16-x86 \
 				  -e APP_BUILD_SCRIPT=a-$TARGET.mk \
 				  -e ARCH=atom \
@@ -113,7 +127,7 @@ x86_sse2()
 		$MAKE NDK_DEBUG=0 \
 				  -j$CPU_CORE \
 				  -e APP_ABI=x86 \
-				  -e APP_PLATFORM=android-19 \
+				  -e APP_PLATFORM=android-$APLATFORM \
 				  -e LINK_AGAINST=16-x86 \
 				  -e APP_BUILD_SCRIPT=a-$TARGET.mk \
 				  -e ARCH=i686 \
@@ -131,7 +145,7 @@ neon()
 		prepare
 		$MAKE NDK_DEBUG=0 \
 				  -j$CPU_CORE \
-				  -e APP_PLATFORM=android-19 \
+				  -e APP_PLATFORM=android-$APLATFORM \
 				  -e LINK_AGAINST=16-arm \
 				  -e APP_BUILD_SCRIPT=a-$TARGET.mk \
 				  -e ARCH=armv7-a \
@@ -155,7 +169,7 @@ tegra3()
 		prepare
 		$MAKE NDK_DEBUG=0 \
 				  -j$CPU_CORE \
-				  -e APP_PLATFORM=android-19 \
+				  -e APP_PLATFORM=android-$APLATFORM \
 				  -e LINK_AGAINST=16-arm \
 				  -e APP_BUILD_SCRIPT=a-$TARGET.mk \
 				  -e ARCH=armv7-a \
@@ -181,7 +195,7 @@ tegra2()
 		echo -ne '\nBUILDING '$TARGET'.tegra2...\n\n' 
 		$MAKE NDK_DEBUG=0 \
 				  -j$CPU_CORE \
-				  -e APP_PLATFORM=android-19 \
+				  -e APP_PLATFORM=android-$APLATFORM \
 				  -e LINK_AGAINST=16-arm \
 				  -e APP_BUILD_SCRIPT=a-$TARGET.mk \
 				  -e ARCH=armv7-a \
@@ -206,7 +220,7 @@ v7a()
 		echo -ne '\nBUILDING '$TARGET'.v7a...\n\n' 
 		$MAKE NDK_DEBUG=0 \
 				  -j$CPU_CORE \
-				  -e APP_PLATFORM=android-19 \
+				  -e APP_PLATFORM=android-$APLATFORM \
 				  -e LINK_AGAINST=16-arm \
 				  -e APP_BUILD_SCRIPT=a-$TARGET.mk \
 				  -e ARCH=armv7-a \
@@ -231,7 +245,7 @@ v6_vfp()
 		echo -ne '\nBUILDING '$TARGET'.v6+vfp...\n\n' 
 		$MAKE NDK_DEBUG=0 \
 				  -j$CPU_CORE \
-				  -e APP_PLATFORM=android-19 \
+				  -e APP_PLATFORM=android-$APLATFORM \
 				  -e LINK_AGAINST=16-arm \
 				  -e APP_BUILD_SCRIPT=a-$TARGET.mk \
 				  -e ARCH=armv6 \
@@ -256,7 +270,7 @@ v6()
 		echo -ne '\nBUILDING '$TARGET'.v6...\n\n' 
 		$MAKE NDK_DEBUG=0 \
 				  -j$CPU_CORE \
-				  -e APP_PLATFORM=android-19 \
+				  -e APP_PLATFORM=android-$APLATFORM \
 				  -e LINK_AGAINST=16-arm \
 				  -e APP_BUILD_SCRIPT=a-$TARGET.mk \
 				  -e ARCH=armv6 \
@@ -280,7 +294,7 @@ v5te()
 		echo -ne '\nBUILDING '$TARGET'.v5te...\n\n' 
 		$MAKE NDK_DEBUG=0 \
 				  -j$CPU_CORE \
-				  -e APP_PLATFORM=android-19 \
+				  -e APP_PLATFORM=android-$APLATFORM \
 				  -e LINK_AGAINST=16-arm \
 				  -e APP_BUILD_SCRIPT=a-$TARGET.mk \
 				  -e ARCH=armv5te \
@@ -336,6 +350,12 @@ v5te()
 				PROFILE=1 ;;
 			4.8)
 				export NDK_TOOLCHAIN_VERSION=4.8 ;;
+            19)
+                APLATFORM=19 ;;
+            20)
+                APLATFORM=20 ;;
+            21)
+                APLATFORM=21 ;;
 		esac
 	done
 #fi

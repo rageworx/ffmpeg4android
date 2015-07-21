@@ -11,6 +11,7 @@ fi
 
 HOST_PLATFORM=linux-x86
 GCC_VER=4.8
+APPLEVEL=22
 
 case $1 in
 	arm64)
@@ -23,17 +24,17 @@ case $1 in
 
 		if [ $1 == 'tegra3' ] 
 		then
-			LIB_MX="../libs/armeabi-v7a/tegra3"
+			LIB_EXT="../libs/armeabi-v7a/tegra3"
 			EXTRA_CFLAGS+=" -mno-unaligned-access"
 			EXTRA_PARAMETERS="--disable-fast-unaligned"
 		else
-			LIB_MX="../libs/armeabi-v7a/neon"
+			LIB_EXT="../libs/armeabi-v7a/neon"
 		fi
 		;;
 	tegra2)
 		ARCH=arm
 		CPU=armv7-a
-		LIB_MX="../libs/armeabi-v7a/vfpv3-d16"
+		LIB_EXT="../libs/armeabi-v7a/vfpv3-d16"
 		EXTRA_CFLAGS="-mfloat-abi=softfp -mfpu=vfpv3-d16"
 		EXTRA_LDFLAGS="-Wl,--fix-cortex-a8"
 		EXTRA_PARAMETERS="--disable-neon"
@@ -41,28 +42,31 @@ case $1 in
 	v6_vfp)
 		ARCH=arm
 		CPU=armv6
-		LIB_MX="../libs/armeabi-v6/vfp"
+        APPLEVEL=19
+		LIB_EXT="../libs/armeabi-v6/vfp"
 		EXTRA_CFLAGS="-mfloat-abi=softfp -mfpu=vfp"
 		EXTRA_PARAMETERS="--disable-neon"
 		;;
 	v6)
 		ARCH=arm
 		CPU=armv6
-		LIB_MX="../libs/armeabi-v6"
+        APPLEVEL=19
+		LIB_EXT="../libs/armeabi-v6"
 		EXTRA_CFLAGS="-msoft-float"
 		EXTRA_PARAMETERS="--disable-neon --disable-vfp"
 		;;
 	v5te)
 		ARCH=arm
 		CPU=armv5te
-		LIB_MX="../libs/armeabi-v5"
+        APPLEVEL=19
+		LIB_EXT="../libs/armeabi-v5"
 		EXTRA_CFLAGS="-msoft-float -mtune=xscale"
 		EXTRA_PARAMETERS="--disable-neon --disable-armv6"
 		;;
 	x86_64)
 		ARCH=x86_64
 		CPU=atom
-		LIB_MX="../libs/x86_64"
+		LIB_EXT="../libs/x86_64"
 		EXTRA_CFLAGS="-mtune=atom -msse3 -mssse3 -mfpmath=sse"
 		;;
 # pic not works even it exclueded in Android toolchain.
@@ -73,7 +77,7 @@ case $1 in
 	x86)
 		ARCH=x86
 		CPU=atom
-		LIB_MX="../libs/x86"
+		LIB_EXT="../libs/x86"
 		EXTRA_CFLAGS="-mtune=atom -msse3 -mssse3 -mfpmath=sse"
 
 # Actually it supports sse4.2, but it embodied to each different ways.
@@ -83,14 +87,14 @@ case $1 in
 	x86_sse2)
 		ARCH=x86
 		CPU=i686
-		LIB_MX="../libs/x86-sse2"
+		LIB_EXT="../libs/x86-sse2"
 		EXTRA_CFLAGS="-msse2 -mno-sse3 -mno-ssse3 -mfpmath=sse"
 		EXTRA_PARAMETERS="--disable-sse3"
 		;;
 	mips)
 		ARCH=mips
 		CPU=mips32r2
-		LIB_MX="../libs/mips"
+		LIB_EXT="../libs/mips"
 		EXTRA_CFLAGS=
 		EXTRA_PARAMETERS="--disable-mipsfpu --disable-mipsdspr1 --disable-mipsdspr2"
 		;;
@@ -99,34 +103,45 @@ case $1 in
 		exit
 esac
 
+case $2 in
+    19)
+        APPLEVEL=19 ;;
+    20)
+        APPLEVEL=20 ;;
+    21)
+        APPLEVEL=21 ;;
+    22)
+        APPLEVEL=22 ;;
+esac
+
 if [ $ARCH == 'arm' ] 
 then
 	CROSS_PREFIX=$NDK/toolchains/arm-linux-androideabi-$GCC_VER/prebuilt/$HOST_PLATFORM/bin/arm-linux-androideabi-
 	EXTRA_CFLAGS+=" -fstack-protector -fstrict-aliasing"
 	EXTRA_LDFLAGS+=" -march=$CPU"
 	OPTFLAGS="-O2"
-	APP_PLATFORM=android-19
+	APP_PLATFORM=android-$APPLEVEL
 	LINK_AGAINST=16-arm
 elif [ $ARCH == 'x86_64' ] 
 then
 	CROSS_PREFIX=$NDK/toolchains/x86_64-$GCC_VER/prebuilt/$HOST_PLATFORM/bin/x86_64-linux-android-
 	EXTRA_CFLAGS+=" -fstrict-aliasing"
 	OPTFLAGS="-O2 -fno-pic"
-	APP_PLATFORM=android-21
+	APP_PLATFORM=android-$APPLEVEL
 	LINK_AGAINST=21-x86_64
 elif [ $ARCH == 'x86' ] 
 then
 	CROSS_PREFIX=$NDK/toolchains/x86-$GCC_VER/prebuilt/$HOST_PLATFORM/bin/i686-linux-android-
 	EXTRA_CFLAGS+=" -fstrict-aliasing"
 	OPTFLAGS="-O2 -fno-pic"
-	APP_PLATFORM=android-19
+	APP_PLATFORM=android-$APPLEVEL
 	LINK_AGAINST=16-x86
 elif [ $ARCH == 'mips' ] 
 then
 	CROSS_PREFIX=$NDK/toolchains/mipsel-linux-android-$GCC_VER/prebuilt/$HOST_PLATFORM/bin/mipsel-linux-android-
 	EXTRA_CFLAGS+=" -fno-strict-aliasing -fmessage-length=0 -fno-inline-functions-called-once -frerun-cse-after-loop -frename-registers"
 	OPTFLAGS="-O2"
-	APP_PLATFORM=android-19
+	APP_PLATFORM=android-$APPLEVEL
 	# Due to reference to missing symbol __fixdfdi on Novo 7 Paladin.
 	LINK_AGAINST=15-mips
 fi
@@ -165,6 +180,7 @@ fi
 --disable-muxers \
 --disable-devices \
 --disable-filters \
+--disable-opencl \
 --disable-protocol=udplite \
 --disable-demuxer=srt \
 --disable-demuxer=microdvd \
@@ -203,7 +219,7 @@ fi
 --sysroot=$SYS_ROOT \
 --target-os=linux \
 --extra-cflags="-DNDEBUG -mandroid -ftree-vectorize -ffunction-sections -funwind-tables -fomit-frame-pointer -funswitch-loops -finline-limit=300 -finline-functions -fpredictive-commoning -fgcse-after-reload -fipa-cp-clone $EXTRA_CFLAGS -no-canonical-prefixes -pipe" \
---extra-libs="-L$LIB_MX -L../libs/android/$LINK_AGAINST -lm" \
+--extra-libs="-L$LIB_EXT -L../libs/android/$LINK_AGAINST -lm" \
 --extra-ldflags="$EXTRA_LDFLAGS" \
 --optflags="$OPTFLAGS" \
 $EXTRA_PARAMETERS \

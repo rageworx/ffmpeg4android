@@ -19,10 +19,10 @@ if [ ! -e "build.sh" ]; then
 fi
 
 cd ffmpeg
-../config-ffmpeg.sh $1
+../config-ffmpeg.sh $1 $2
 make clean
 make -j$CPU_CORE
 cd ..
 
-./build.sh ffmpeg build $1
+./build.sh ffmpeg build $1 $2
 

@@ -1,13 +1,22 @@
 #!/bin/bash
 
-if [ -e "rebuild-ffmpeg.log" ]; then
-	rm rebuild-ffmpeg.log
-fi
-./build-ffmpeg.sh neon 2>&1 1>> rebuild-ffmpeg.log | tee -a rebuild-ffmpeg.log
-./build-ffmpeg.sh tegra3 2>&1 1>> rebuild-ffmpeg.log | tee -a rebuild-ffmpeg.log
-./build-ffmpeg.sh tegra2 2>&1 1>> rebuild-ffmpeg.log | tee -a rebuild-ffmpeg.log
-./build-ffmpeg.sh v6_vfp 2>&1 1>> rebuild-ffmpeg.log | tee -a rebuild-ffmpeg.log
-./build-ffmpeg.sh v6 2>&1 1>> rebuild-ffmpeg.log | tee -a rebuild-ffmpeg.log
-./build-ffmpeg.sh v5te 2>&1 1>> rebuild-ffmpeg.log | tee -a rebuild-ffmpeg.log
-./build-ffmpeg.sh x86_atom 2>&1 1>> rebuild-ffmpeg.log | tee -a rebuild-ffmpeg.log
-./build-ffmpeg.sh mips 2>&1 1>> rebuild-ffmpeg.log | tee -a rebuild-ffmpeg.log
+PREFIXNAME="build-ffmpeg"
+TARGETS="neon tegra3 tegra2 v6_vfp v6 v5te x86_atom mips"
+ALEVELS=(21   21     19     19     19 21   21       21)
+CNT=0
+
+for ITEM in $TARGETS
+do
+    LOGNAME="$PREFIXNAME-$TARGET.log"
+    if [ -e $LOGNAME ]; then
+        rm $LOGNAME
+    fi
+    if [ $CNT -gt 0 ]; then
+        echo ""
+        echo "///////////////////////////////////////////////////////////////////////"
+        echo ""
+    fi
+    echo "Building target [$ITEM] as Application Platform level ${ALEVELS[$CNT]}..."
+    ./build-ffmpeg.sh $ITEM ${ALEVELS[$CNT]} 2>&1 >> $LOGNAME | tee -a $LOGNAME
+    CNT=($CNT+1)
+done

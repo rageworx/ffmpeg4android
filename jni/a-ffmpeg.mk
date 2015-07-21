@@ -34,23 +34,8 @@ include $(PREBUILT_STATIC_LIBRARY)
 # Merge all static libraries.
 include $(CLEAR_VARS)
 
-LIBS := $(MY_DIR)/libs
-
-ifeq ($(TARGET_ARCH),arm)
-	LIB_OPENSSL := $(LIBS)/android/16-$(TARGET_ARCH)
-endif
-
-ifeq ($(TARGET_ARCH),x86)
-	LIB_OPENSSL := $(LIBS)/android/16-$(TARGET_ARCH)
-endif
-
-ifeq ($(TARGET_ARCH),mips)
-	LIB_OPENSSL := $(LIBS)/android/15-$(TARGET_ARCH)
-endif
-
 LOCAL_LDLIBS := \
 -L$(NDK_APP_DST_DIR) \
--L$(LIB_OPENSSL) \
 -lz
 
 include $(MY_DIR)/a-arch-$(TARGET_ARCH).mk
