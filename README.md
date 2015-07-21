@@ -3,6 +3,8 @@
  - Modified to do not refer to these libraries:
    - iconv(libiconv)
    - openssl(libopenssl)
+   - opencl(libopencl)
+   - MXutil(MXplayer's library archive)
    - and more libraries in has not dependancy on compiler built in libraries.
 
 ## Reference
@@ -22,6 +24,10 @@
 - Changed some NDK reference and bash shell scripts.
 - Changed MX player building scripts to do not refer to additional libraries.
 - Removed some external libraries: openssl, iconv ...
+
+## Updated 21-07-2015
+- Added option to use Application platform level for limit Android API level.
+- Removed libMXutil dependency, This library doesn't need to use this.
 
 ## Environments
 - You should be check by using "env | grep NDK".
