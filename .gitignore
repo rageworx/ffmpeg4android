@@ -9,10 +9,12 @@
 *.class
 
 # Generated files
+.idea/
 bin/
 gen/
 obj/
 lib/
+jni/libs/
 *.tar
 *.tar.gz
 
